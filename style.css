@@ -1,0 +1,99 @@
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0px 0px 0px 0px;
+    font-size: 7vmin;
+}
+
+.game-board {
+    display: grid;
+    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    gap: var(--cell-gap);
+    background-color: #ccc;
+    border-radius: 1vmin;
+    padding: var(--cell-gap);
+    position: relative;
+    -webkit-border-radius: 1vmin;
+    -moz-border-radius: 1vmin;
+    -ms-border-radius: 1vmin;
+    -o-border-radius: 1vmin;
+    
+}
+
+.cell {
+    background-color: #aaa;
+    border-radius: 1vmin;
+    -webkit-border-radius: 1vmin;
+    -moz-border-radius: 1vmin;
+    -ms-border-radius: 1vmin;
+    -o-border-radius: 1vmin;
+}
+
+.tile {
+    --x: 0;
+    --y: 0;
+    --background-lightness: 80%;
+    --text-lightness: 20%;
+    position: absolute;
+    left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+    top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: cadetblue;
+    border-radius: 1vmin;
+    -webkit-border-radius: 1vmin;
+    -moz-border-radius: 1vmin;
+    -ms-border-radius: 1vmin;
+    -o-border-radius: 1vmin;
+    font-weight: bold;
+    background-color: hsl(200, 50%, var(--background-lightness));
+    color: hsl(200, 25%, var(--text-lightness));
+    animation: show 200ms ease-in-out;
+    -webkit-animation: show 200ms ease-in-out;
+    transition: 100ms ease-in-out;
+    -webkit-transition: 100ms ease-in-out;
+    -moz-transition: 100ms ease-in-out;
+    -ms-transition: 100ms ease-in-out;
+    -o-transition: 100ms ease-in-out;
+    /* font-size: 0px; */
+    line-height: 1em;
+    overflow: hidden;
+    overflow-wrap: normal;
+    word-wrap: normal;
+    word-break: normal;
+    line-break: auto;
+    -webkit-hyphens: none;
+    hyphens: none;
+    /* height: 160px; */
+    /* width: 30%; */
+    /* background: rgba(240, 240, 240); */
+}
+
+@keyframes show {
+    0% {
+        opacity: 0.5;
+        transform: scale(0);
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        -o-transform: scale(0);
+    }
+}
