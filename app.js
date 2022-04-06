@@ -10,11 +10,27 @@ document.addEventListener('mouseup', handleMouseMove, false);
 let xDown = null;
 let yDown = null;
 
-const gameBoard = document.querySelector(".game-board")
+let xDownM = null;
+let yDownM = null;
 
-const grid = new Grid(gameBoard)
+let timeS = 0;
+let timeM = 0;
+
+let score = 0
+
+let tabs = []
+let item = {}
+
+const gameBoard = document.querySelector(".game-board")
+const timeEl = document.querySelector(".timer")
+
+let time = setInterval(decreaseTime, 1000)
+
+let grid = new Grid(gameBoard)
 grid.randomEmptyCell().tile = new Tile(gameBoard)
 grid.randomEmptyCell().tile = new Tile(gameBoard)
+
+
 
 setupInput()
 
@@ -53,53 +69,45 @@ async function handleInput(e) {
             await moveRight()
             break
         default:
-            await setupInput()
+            // await setupInput()
             break
     }
 
     grid.cells.forEach(cell => cell.mergeTiles())
-
+    
     const newTile = new Tile(gameBoard)
     grid.randomEmptyCell().tile = newTile
 
-    if (!canMoveUp && !canMoveDown && !canMoveLeft && !canMoveRight) {
+    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
         newTile.waitForTransition(true).then(() => {
             alert("lose")
+            lose()
         })
     }
-
-    setupInput()
-}
-
-function getTouches(e) {
-    return e.touches
-}
-
-function handleTouchStart(e) {
-    const firstTouch = getTouches(e)[0];
-    xDown = firstTouch.clientX;
-    yDown = firstTouch.clientY;
-
     
+    setupInput()
+    newTile.waitForTransition(true).then(() =>{
+        checkWin()
+        setsScore()
+
+    })
+
 }
+
 
 function handleMouseStart(e) {
-    let xDow = e.clientX
-    let yDown = e.clientY
-
-    // console.log(xDow, yDown)
+    xDownM = e.clientX
+    yDownM = e.clientY
 }
 
-async function handleMouseMove(e) {
+async function handleMouseMove(e,) {
 
-    console.log("dddd")
     let x = e.clientX
     let y = e.clientY
-    
-    let xDiff = xDown - x;
-    let yDiff = yDown - y;
 
-    console.log(xDiff, yDiff)
+    let xDiff = xDownM - x;
+    let yDiff = yDownM - y;
+
     if (Math.abs(xDiff) > Math.abs(yDiff)) {
         if (xDiff > 0) {
             if (!canMoveLeft()) {
@@ -130,24 +138,38 @@ async function handleMouseMove(e) {
         }
     }
 
-    xDown = null;
-    yDown = null;
+    xDownM = null;
+    yDownM = null;
 
     grid.cells.forEach(cell => cell.mergeTiles())
 
     const newTile = new Tile(gameBoard)
     grid.randomEmptyCell().tile = newTile
 
-    if (!canMoveUp && !canMoveDown && !canMoveLeft && !canMoveRight) {
+    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
         newTile.waitForTransition(true).then(() => {
             alert("lose")
+            lose()
         })
     }
 
     setupInput()
+    newTile.waitForTransition(true).then(() =>{
+        checkWin()
+        setsScore()
 
+    })
 }
 
+function getTouches(e) {
+    return e.touches
+}
+
+function handleTouchStart(e) {
+    const firstTouch = getTouches(e)[0];
+    xDown = firstTouch.clientX;
+    yDown = firstTouch.clientY;
+}
 
 async function handleTouchMove(e) {
     if (!xDown || !yDown) {
@@ -161,8 +183,6 @@ async function handleTouchMove(e) {
     let xDiff = xDown - xUp;
     let yDiff = yDown - yUp;
 
-    console.log(xDiff, yDiff)
-
     if (Math.abs(xDiff) > Math.abs(yDiff)) {
         if (xDiff > 0) {
             if (!canMoveLeft()) {
@@ -201,13 +221,19 @@ async function handleTouchMove(e) {
     const newTile = new Tile(gameBoard)
     grid.randomEmptyCell().tile = newTile
 
-    if (!canMoveUp && !canMoveDown && !canMoveLeft && !canMoveRight) {
+    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
         newTile.waitForTransition(true).then(() => {
             alert("lose")
+            lose()
         })
     }
 
     setupInput()
+    newTile.waitForTransition(true).then(() =>{
+        checkWin()
+        setsScore()
+
+    })
 };
 
 function moveUp() {
@@ -243,6 +269,7 @@ function slideTiles(cells) {
                     promises.push(cell.tile.waitForTransition())
                     if (lastValidCell.tile != null) {
                         lastValidCell.mergeTile = cell.tile
+                        score += cell.tile.value * 2
                     } else {
                         lastValidCell.tile = cell.tile
                     }
@@ -280,3 +307,55 @@ function canMove(cells) {
     })
 }
 
+function decreaseTime() {
+    let current = ++timeS
+
+    if (current < 10) {
+        current = `0${current}`
+    }
+    if (current === 60) {
+        timeS = 0
+        current = 0
+        ++timeM
+    }
+    if (current === 0) {
+        current = `00`
+    }
+    setTime(current)
+}
+
+function setTime(value) {
+    timeEl.innerHTML = `${timeM}:${value}`
+}
+
+function lose(){
+    clearInterval(time)
+    while (gameBoard.firstChild) {
+        gameBoard.removeChild(gameBoard.firstChild);
+    }
+    grid = new Grid(gameBoard)
+    grid.randomEmptyCell().tile = new Tile(gameBoard)
+    grid.randomEmptyCell().tile = new Tile(gameBoard)
+    timeS = 0
+    timeM = 0
+    score = 0
+    time = setInterval(decreaseTime, 1000)
+}
+
+function checkWin(){
+    let count = 0;
+    for(let i = 0; i < grid.cells.length; i++){
+        if(grid.cells[i].tile){
+            count += grid.cells[i].tile.value
+            if(grid.cells[i].tile.value === 1024){
+                alert("win")
+            }
+
+        }
+    }
+}
+
+function setsScore(){
+    document.querySelector(".score").innerHTML = score
+}
+    // console.log(grid.cells[0].tile.value)

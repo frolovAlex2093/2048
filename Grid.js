@@ -1,6 +1,8 @@
-const GRID_SIZE = 5
+const GRID_SIZE = 4
 const CELL_SIZE = 15
 const CELL_GAP = 2
+
+const score = document.querySelector(".score")
 
 export default class Grid {
     #cells
@@ -99,7 +101,7 @@ class Cell {
     }
 
     mergeTiles() {
-        if (this.tile == null || this.mergeTile == null) return
+        if (this.tile == null || this.mergeTile == null)  return
         this.tile.value = this.tile.value + this.mergeTile.value
         this.mergeTile.remove()
         this.mergeTile = null
@@ -116,3 +118,5 @@ function createCellElements(gridElement) {
     }
     return cells
 }
+
+
