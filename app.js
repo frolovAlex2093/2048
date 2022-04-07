@@ -107,6 +107,7 @@ async function handleInput(e) {
     setupInput()
     newTile.waitForTransition(true).then(() => {
         checkWin()
+        setsScore()
     })
 
 }
@@ -170,6 +171,7 @@ async function handleMouseMove(e,) {
 
         newTile.waitForTransition(true).then(() => {
             checkWin()
+            setsScore()
         })
 
     }
@@ -250,6 +252,7 @@ async function handleTouchMove(e) {
 
         newTile.waitForTransition(true).then(() => {
             checkWin()
+            setsScore()
 
         })
         e.preventDefault()
@@ -384,6 +387,10 @@ function checkWin() {
 
         }
     }
+}
+
+function setsScore(){
+    document.querySelector(".score").innerHTML = score
 }
 
 
