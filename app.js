@@ -107,8 +107,6 @@ async function handleInput(e) {
     setupInput()
     newTile.waitForTransition(true).then(() => {
         checkWin()
-        setsScore()
-
     })
 
 }
@@ -172,8 +170,6 @@ async function handleMouseMove(e,) {
 
         newTile.waitForTransition(true).then(() => {
             checkWin()
-            setsScore()
-
         })
 
     }
@@ -194,6 +190,7 @@ function handleTouchStart(e) {
 }
 
 async function handleTouchMove(e) {
+    e.preventDefault()
     if (!xDown || !yDown) {
         return
     }
@@ -212,11 +209,13 @@ async function handleTouchMove(e) {
                     return
                 }
                 await moveLeft()
+                e.preventDefault()
             } else {
                 if (!canMoveRight()) {
                     return
                 }
                 await moveRight()
+                e.preventDefault()
             }
         } else {
             if (yDiff > 0) {
@@ -224,11 +223,13 @@ async function handleTouchMove(e) {
                     return
                 }
                 await moveUp()
+                e.preventDefault()
             } else {
                 if (!canMoveDown()) {
                     return
                 }
                 await moveDown()
+                e.preventDefault()
             }
         }
 
@@ -249,9 +250,9 @@ async function handleTouchMove(e) {
 
         newTile.waitForTransition(true).then(() => {
             checkWin()
-            setsScore()
 
         })
+        e.preventDefault()
     }
 
 };
@@ -353,6 +354,12 @@ function lose() {
     while (gameBoard.firstChild) {
         gameBoard.removeChild(gameBoard.firstChild);
     }
+    gameBoard.innerHTML = `<div class="aaa"></div>`
+    document.querySelector(".aaa").addEventListener('touchstart', handleTouchStart, false);
+    document.querySelector(".aaa").addEventListener('touchmove', handleTouchMove, false);
+
+    document.querySelector(".aaa").addEventListener('mousedown', handleMouseStart, false);
+    document.querySelector(".aaa").addEventListener('mouseup', handleMouseMove, false);
     grid = new Grid(gameBoard)
     grid.randomEmptyCell().tile = new Tile(gameBoard)
     grid.randomEmptyCell().tile = new Tile(gameBoard)
@@ -367,11 +374,11 @@ function checkWin() {
     for (let i = 0; i < grid.cells.length; i++) {
         if (grid.cells[i].tile) {
             count += grid.cells[i].tile.value
-            if (grid.cells[i].tile.value === 32) {
+            if (grid.cells[i].tile.value === 2048) {
                 alert("win")
                 columScore.innerHTML += `<div class="ststistic__score">${score}</div>`
                 columTime.innerHTML += `<div class="ststistic__score">${timeM}:${timeS}</div>`
-                columPosition.innerHTML += `<div class="ststistic__score">${columPosition.children.length+1}.</div>`
+                columPosition.innerHTML += `<div class="ststistic__score">${columPosition.children.length + 1}.</div>`
                 lose()
             }
 
@@ -379,8 +386,5 @@ function checkWin() {
     }
 }
 
-function setsScore() {
-    document.querySelector(".score").innerHTML = score
-}
-// console.log(grid.cells[0].tile.value)
 
+// console.log(grid.cells[0].tile.value)
