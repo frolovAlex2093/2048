@@ -1,11 +1,11 @@
 import Grid from "./Grid.js"
 import Tile from "./Tile.js"
 
-document.addEventListener('touchstart', handleTouchStart, false);
-document.addEventListener('touchmove', handleTouchMove, false);
+document.querySelector(".aaa").addEventListener('touchstart', handleTouchStart, false);
+document.querySelector(".aaa").addEventListener('touchmove', handleTouchMove, false);
 
-document.addEventListener('mousedown', handleMouseStart, false);
-document.addEventListener('mouseup', handleMouseMove, false);
+document.querySelector(".aaa").addEventListener('mousedown', handleMouseStart, false);
+document.querySelector(".aaa").addEventListener('mouseup', handleMouseMove, false);
 
 let xDown = null;
 let yDown = null;
@@ -30,7 +30,26 @@ let grid = new Grid(gameBoard)
 grid.randomEmptyCell().tile = new Tile(gameBoard)
 grid.randomEmptyCell().tile = new Tile(gameBoard)
 
+let statisticList = document.querySelector(".statistic__list")
+let columTime = document.querySelector(".statistic__colum-time")
+let columPosition = document.querySelector(".statistic__colum-position")
+let columScore = document.querySelector(".statistic__colum-score")
 
+
+document.querySelector(".ststistic__button").addEventListener("click", () => {
+    if (statisticList.classList.contains("hide")) {
+        statisticList.classList.remove("hide")
+        statisticList.classList.add("show")
+    }
+})
+document.querySelector(".satistic__close").addEventListener("click", () => {
+    if (statisticList.classList.contains("show")) {
+        statisticList.classList.remove("show")
+        statisticList.classList.add("hide")
+    }
+})
+
+console.log(document.querySelector(".statistic__colum-time").children.length)
 
 setupInput()
 
@@ -74,7 +93,7 @@ async function handleInput(e) {
     }
 
     grid.cells.forEach(cell => cell.mergeTiles())
-    
+
     const newTile = new Tile(gameBoard)
     grid.randomEmptyCell().tile = newTile
 
@@ -84,9 +103,9 @@ async function handleInput(e) {
             lose()
         })
     }
-    
+
     setupInput()
-    newTile.waitForTransition(true).then(() =>{
+    newTile.waitForTransition(true).then(() => {
         checkWin()
         setsScore()
 
@@ -108,57 +127,60 @@ async function handleMouseMove(e,) {
     let xDiff = xDownM - x;
     let yDiff = yDownM - y;
 
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        if (xDiff > 0) {
-            if (!canMoveLeft()) {
-                setupInput()
-                return
+    if (xDiff !== 0 && yDiff !== 0) {
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+
+            if (xDiff > 0) {
+                if (!canMoveLeft()) {
+                    return
+                }
+                await moveLeft()
+            } else {
+                if (!canMoveRight()) {
+                    return
+                }
+                await moveRight()
             }
-            await moveLeft()
         } else {
-            if (!canMoveRight()) {
-                setupInput()
-                return
+            if (yDiff > 0) {
+                if (!canMoveUp()) {
+                    return
+                }
+                await moveUp()
+            } else {
+                if (!canMoveDown()) {
+                    return
+                }
+                await moveDown()
             }
-            await moveRight()
         }
-    } else {
-        if (yDiff > 0) {
-            if (!canMoveUp()) {
-                setupInput()
-                return
-            }
-            await moveUp()
-        } else {
-            if (!canMoveDown()) {
-                setupInput()
-                return
-            }
-            await moveDown()
+
+        xDownM = null;
+        yDownM = null;
+
+        grid.cells.forEach(cell => cell.mergeTiles())
+
+        const newTile = new Tile(gameBoard)
+        grid.randomEmptyCell().tile = newTile
+
+        if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+            newTile.waitForTransition(true).then(() => {
+                alert("lose")
+                lose()
+            })
         }
-    }
 
-    xDownM = null;
-    yDownM = null;
-
-    grid.cells.forEach(cell => cell.mergeTiles())
-
-    const newTile = new Tile(gameBoard)
-    grid.randomEmptyCell().tile = newTile
-
-    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
         newTile.waitForTransition(true).then(() => {
-            alert("lose")
-            lose()
+            checkWin()
+            setsScore()
+
         })
+
     }
 
-    setupInput()
-    newTile.waitForTransition(true).then(() =>{
-        checkWin()
-        setsScore()
 
-    })
+
+
 }
 
 function getTouches(e) {
@@ -183,57 +205,55 @@ async function handleTouchMove(e) {
     let xDiff = xDown - xUp;
     let yDiff = yDown - yUp;
 
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        if (xDiff > 0) {
-            if (!canMoveLeft()) {
-                setupInput()
-                return
+    if (yDiff !== 0 && xDiff !== 0) {
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff > 0) {
+                if (!canMoveLeft()) {
+                    return
+                }
+                await moveLeft()
+            } else {
+                if (!canMoveRight()) {
+                    return
+                }
+                await moveRight()
             }
-            await moveLeft()
         } else {
-            if (!canMoveRight()) {
-                setupInput()
-                return
+            if (yDiff > 0) {
+                if (!canMoveUp()) {
+                    return
+                }
+                await moveUp()
+            } else {
+                if (!canMoveDown()) {
+                    return
+                }
+                await moveDown()
             }
-            await moveRight()
         }
-    } else {
-        if (yDiff > 0) {
-            if (!canMoveUp()) {
-                setupInput()
-                return
-            }
-            await moveUp()
-        } else {
-            if (!canMoveDown()) {
-                setupInput()
-                return
-            }
-            await moveDown()
+
+        xDown = null;
+        yDown = null;
+
+        grid.cells.forEach(cell => cell.mergeTiles())
+
+        const newTile = new Tile(gameBoard)
+        grid.randomEmptyCell().tile = newTile
+
+        if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+            newTile.waitForTransition(true).then(() => {
+                alert("lose")
+                lose()
+            })
         }
-    }
 
-    xDown = null;
-    yDown = null;
-
-    grid.cells.forEach(cell => cell.mergeTiles())
-
-    const newTile = new Tile(gameBoard)
-    grid.randomEmptyCell().tile = newTile
-
-    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
         newTile.waitForTransition(true).then(() => {
-            alert("lose")
-            lose()
+            checkWin()
+            setsScore()
+
         })
     }
 
-    setupInput()
-    newTile.waitForTransition(true).then(() =>{
-        checkWin()
-        setsScore()
-
-    })
 };
 
 function moveUp() {
@@ -328,7 +348,7 @@ function setTime(value) {
     timeEl.innerHTML = `${timeM}:${value}`
 }
 
-function lose(){
+function lose() {
     clearInterval(time)
     while (gameBoard.firstChild) {
         gameBoard.removeChild(gameBoard.firstChild);
@@ -342,20 +362,25 @@ function lose(){
     time = setInterval(decreaseTime, 1000)
 }
 
-function checkWin(){
+function checkWin() {
     let count = 0;
-    for(let i = 0; i < grid.cells.length; i++){
-        if(grid.cells[i].tile){
+    for (let i = 0; i < grid.cells.length; i++) {
+        if (grid.cells[i].tile) {
             count += grid.cells[i].tile.value
-            if(grid.cells[i].tile.value === 1024){
+            if (grid.cells[i].tile.value === 32) {
                 alert("win")
+                columScore.innerHTML += `<div class="ststistic__score">${score}</div>`
+                columTime.innerHTML += `<div class="ststistic__score">${timeM}:${timeS}</div>`
+                columPosition.innerHTML += `<div class="ststistic__score">${columPosition.children.length+1}.</div>`
+                lose()
             }
 
         }
     }
 }
 
-function setsScore(){
+function setsScore() {
     document.querySelector(".score").innerHTML = score
 }
-    // console.log(grid.cells[0].tile.value)
+// console.log(grid.cells[0].tile.value)
+

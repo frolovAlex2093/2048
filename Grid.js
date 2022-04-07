@@ -1,6 +1,6 @@
-const GRID_SIZE = 4
-const CELL_SIZE = 15
-const CELL_GAP = 2
+const GRID_SIZE = 5
+const CELL_SIZE = 13
+const CELL_GAP = 1
 
 const score = document.querySelector(".score")
 

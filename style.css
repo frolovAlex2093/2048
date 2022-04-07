@@ -17,48 +17,50 @@ body {
     width: min-content;
     height: 100vh;
     margin: 0 auto;
-    font-size: 7vmin;
+    font-size: 5vmin;
     cursor: default;
     overflow: hidden;
 }
 
-.header{
+.header {
     display: flex;
-    /* justify-content: space-between; */
     padding-bottom: 1vmin;
     margin-top: 2.5vmin;
     align-items: center;
     gap: 1vmin;
     color: white;
+    border-bottom: 3px solid white;
+    margin: 50px 0px 20px 0px;
 }
 
-.timer{
+.timer {
     display: flex;
-    flex: 0 0 33.333%;   
+    flex: 0 0 33.333%;
     justify-content: center;
     align-items: center;
-    text-align: center; 
+    text-align: center;
 }
 
-.title{
+.title {
     display: flex;
-    flex: 0 0 33.333%;   
+    flex: 0 0 33.333%;
     justify-content: center;
     align-items: center;
-    text-align: center; 
+    text-align: center;
     font-weight: bold;
     font-size: 8vmin;
 }
 
-.score{
+.score {
     display: flex;
-    flex: 0 0 33.333%;   
+    flex: 0 0 33.333%;
     justify-content: center;
     align-items: center;
-    text-align: center; 
+    text-align: center;
 }
 
 .game-board {
+    margin: auto;
     display: grid;
     grid-template-rows: repeat(var(--grid-size), var(--cell-size));
     grid-template-columns: repeat(var(--grid-size), var(--cell-size));
@@ -71,7 +73,6 @@ body {
     -moz-border-radius: 1vmin;
     -ms-border-radius: 1vmin;
     -o-border-radius: 1vmin;
-    
 }
 
 .cell {
@@ -138,11 +139,88 @@ body {
     }
 }
 
-.aaa{
+.aaa {
     width: 100%;
     height: 100%;
     z-index: 100;
     top: 0;
     left: 0;
-    position: fixed;
+    position: absolute;
+}
+
+.ststistic__button {
+    margin: 30px auto;
+    padding: 20px;
+    font-size: 5vmin;
+    color: white;
+    background: rgb(80, 77, 77);
+    width: min-content;
+    cursor: pointer;
+    margin-bottom: 100px;
+    position: relative;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+
+.ststistic__button:hover{
+    background: rgb(90, 77, 77);
+
+}
+
+.statistic__list{
+    padding-top: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 999;
+    transform: translate(-50%, -50%);
+    background-color: rgb(20, 20, 20);
+    width: 80%;
+    height: auto;
+    display: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    color: white;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+
+.statistic__colmn{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.statistic__items{
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+}
+
+.satistic__close{
+    margin: 30px auto 30px auto;
+    width: 50%;
+    color: white;
+    background: none;
+    cursor: pointer;
+    font-size: 4vmin;
+    border: white 2px solid;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.hide{
+    display: none;
+}
+
+.show{
+    display: flex;
 }
