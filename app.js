@@ -186,10 +186,7 @@ async function handleTouchMove(e) {
     let xDiff = xDown - xUp;
     let yDiff = yDown - yUp;
 
-    console.log(xDown)
-    console.log(xUp)
-    console.log(xDiff)
-
+    e.preventDefault()
 
     if (yDiff !== 0 && xDiff !== 0) {
         if (Math.abs(xDiff) > Math.abs(yDiff)) {
