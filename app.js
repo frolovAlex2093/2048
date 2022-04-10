@@ -1,12 +1,6 @@
 import Grid from "./Grid.js"
 import Tile from "./Tile.js"
 
-document.querySelector(".aaa").addEventListener('touchstart', handleTouchStart, false);
-document.querySelector(".aaa").addEventListener('touchmove', handleTouchMove, false);
-
-document.querySelector(".aaa").addEventListener('mousedown', handleMouseStart, false);
-document.querySelector(".aaa").addEventListener('mouseup', handleMouseMove, false);
-
 let xDown = null;
 let yDown = null;
 
@@ -24,11 +18,11 @@ let item = {}
 const gameBoard = document.querySelector(".game-board")
 const timeEl = document.querySelector(".timer")
 
-let time = setInterval(decreaseTime, 1000)
+let time
 
 let grid = new Grid(gameBoard)
-grid.randomEmptyCell().tile = new Tile(gameBoard)
-grid.randomEmptyCell().tile = new Tile(gameBoard)
+
+alertGame("start")
 
 let statisticList = document.querySelector(".statistic__list")
 let columTime = document.querySelector(".statistic__colum-time")
@@ -48,10 +42,6 @@ document.querySelector(".satistic__close").addEventListener("click", () => {
         statisticList.classList.add("hide")
     }
 })
-
-console.log(document.querySelector(".statistic__colum-time").children.length)
-
-setupInput()
 
 function setupInput() {
     window.addEventListener("keydown", handleInput, { once: true })
@@ -88,7 +78,7 @@ async function handleInput(e) {
             await moveRight()
             break
         default:
-            // await setupInput()
+            //await setupInput()
             break
     }
 
@@ -99,8 +89,8 @@ async function handleInput(e) {
 
     if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
         newTile.waitForTransition(true).then(() => {
-            alert("lose")
-            lose()
+            clearInterval(time)
+            alertGame("lose")
         })
     }
 
@@ -109,9 +99,7 @@ async function handleInput(e) {
         checkWin()
         setsScore()
     })
-
 }
-
 
 function handleMouseStart(e) {
     xDownM = e.clientX
@@ -164,8 +152,8 @@ async function handleMouseMove(e,) {
 
         if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
             newTile.waitForTransition(true).then(() => {
-                alert("lose")
-                lose()
+                clearInterval(time)
+                alertGame("lose")
             })
         }
 
@@ -173,12 +161,7 @@ async function handleMouseMove(e,) {
             checkWin()
             setsScore()
         })
-
     }
-
-
-
-
 }
 
 function getTouches(e) {
@@ -199,7 +182,6 @@ async function handleTouchMove(e) {
 
     let xUp = e.touches[0].clientX;
     let yUp = e.touches[0].clientY;
-
 
     let xDiff = xDown - xUp;
     let yDiff = yDown - yUp;
@@ -245,15 +227,14 @@ async function handleTouchMove(e) {
 
         if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
             newTile.waitForTransition(true).then(() => {
-                alert("lose")
-                lose()
+                clearInterval(time)
+                alertGame("lose")
             })
         }
 
         newTile.waitForTransition(true).then(() => {
             checkWin()
             setsScore()
-
         })
         e.preventDefault()
     }
@@ -346,30 +327,11 @@ function decreaseTime() {
         current = `00`
     }
     setTime(current)
+    return current
 }
 
 function setTime(value) {
     timeEl.innerHTML = `${timeM}:${value}`
-}
-
-function lose() {
-    clearInterval(time)
-    while (gameBoard.firstChild) {
-        gameBoard.removeChild(gameBoard.firstChild);
-    }
-    gameBoard.innerHTML = `<div class="aaa"></div>`
-    document.querySelector(".aaa").addEventListener('touchstart', handleTouchStart, false);
-    document.querySelector(".aaa").addEventListener('touchmove', handleTouchMove, false);
-
-    document.querySelector(".aaa").addEventListener('mousedown', handleMouseStart, false);
-    document.querySelector(".aaa").addEventListener('mouseup', handleMouseMove, false);
-    grid = new Grid(gameBoard)
-    grid.randomEmptyCell().tile = new Tile(gameBoard)
-    grid.randomEmptyCell().tile = new Tile(gameBoard)
-    timeS = 0
-    timeM = 0
-    score = 0
-    time = setInterval(decreaseTime, 1000)
 }
 
 function checkWin() {
@@ -377,21 +339,74 @@ function checkWin() {
     for (let i = 0; i < grid.cells.length; i++) {
         if (grid.cells[i].tile) {
             count += grid.cells[i].tile.value
-            if (grid.cells[i].tile.value === 2048) {
-                alert("win")
-                columScore.innerHTML += `<div class="ststistic__score">${score}</div>`
-                columTime.innerHTML += `<div class="ststistic__score">${timeM}:${timeS}</div>`
-                columPosition.innerHTML += `<div class="ststistic__score">${columPosition.children.length + 1}.</div>`
-                lose()
+            if (grid.cells[i].tile.value === 32) {
+                clearInterval(time)
+                alertGame("win")
             }
-
         }
     }
+    setupInput()
 }
 
-function setsScore(){
+function setsScore() {
     document.querySelector(".score").innerHTML = score
 }
 
 
 // console.log(grid.cells[0].tile.value)
+
+function alertGame(text){
+    
+    let alert = document.querySelector(".alert-game")
+    let alertText = document.querySelector(".alert-game__text")
+    let alertButton = document.querySelector(".alert-game__button")
+    alert.classList.remove("hide")
+    alert.classList.add("show")
+
+    if(text === "win"){
+        columScore.innerHTML += `<div class="ststistic__score">${score}</div>`
+        columTime.innerHTML += `<div class="ststistic__time">${timeM}:${decreaseTime()}</div>`
+        columPosition.innerHTML += `<div class="ststistic__position">${columPosition.children.length + 1}.</div>`  
+
+        alertText.innerHTML = `Вы выйграли <br> время: ${timeM}:${decreaseTime()} <br> счет: ${score}`
+        alertButton.innerHTML = "ЗАНОВО"
+        
+    }else if(text === "lose"){
+        alertText.innerHTML = `Вы проиграли <br> время: ${timeM}:${decreaseTime()} <br> счет: ${score}`
+        alertButton.innerHTML = "ЗАНОВО"
+
+    }else if(text === "start"){
+        alertText.innerHTML = "2048"
+    }
+    alertButton.addEventListener("click", () => {
+        alert.classList.remove("show")
+        alert.classList.add("hide")
+        startGame()
+    })
+}
+
+function startGame(){
+    clearInterval(time)
+    score = 0
+    setsScore()
+    timeM = 0
+    timeS = 0
+       
+    while (gameBoard.firstChild) {
+        gameBoard.removeChild(gameBoard.firstChild);
+    }
+
+    gameBoard.innerHTML = `<div class="aaa"></div>`
+    document.querySelector(".aaa").addEventListener('touchstart', handleTouchStart, false);
+    document.querySelector(".aaa").addEventListener('touchmove', handleTouchMove, false);
+
+    document.querySelector(".aaa").addEventListener('mousedown', handleMouseStart, false);
+    document.querySelector(".aaa").addEventListener('mouseup', handleMouseMove, false);
+
+    grid = new Grid(gameBoard)
+    grid.randomEmptyCell().tile = new Tile(gameBoard)
+    grid.randomEmptyCell().tile = new Tile(gameBoard)
+    
+    time = setInterval(decreaseTime, 1000)
+    setupInput()
+}
