@@ -352,11 +352,8 @@ function setsScore() {
     document.querySelector(".score").innerHTML = score
 }
 
+function alertGame(text) {
 
-// console.log(grid.cells[0].tile.value)
-
-function alertGame(text){
-    
     let alert = document.querySelector(".alert-game")
     let alertText = document.querySelector(".alert-game__text")
     let alertButton = document.querySelector(".alert-game__button")
@@ -368,19 +365,16 @@ function alertGame(text){
         seconds = `0${seconds}`
     }
 
-    if(text === "win"){
-        columScore.innerHTML += `<div class="ststistic__score">${score}</div>`
-        columTime.innerHTML += `<div class="ststistic__time">${timeM}:${seconds}</div>`
-        columPosition.innerHTML += `<div class="ststistic__position">${columPosition.children.length + 1}.</div>`  
-
+    if (text === "win") {
+        printStatistic()
         alertText.innerHTML = `Вы выйграли <br> время: ${timeM}:${seconds} <br> счет: ${score}`
         alertButton.innerHTML = "ЗАНОВО"
-        
-    }else if(text === "lose"){
+
+    } else if (text === "lose") {
         alertText.innerHTML = `Вы проиграли <br> время: ${timeM}:${seconds} <br> счет: ${score}`
         alertButton.innerHTML = "ЗАНОВО"
 
-    }else if(text === "start"){
+    } else if (text === "start") {
         alertText.innerHTML = "Наберите 2048"
     }
     alertButton.addEventListener("click", () => {
@@ -390,13 +384,13 @@ function alertGame(text){
     })
 }
 
-function startGame(){
+function startGame() {
     clearInterval(time)
     score = 0
     setsScore()
     timeM = 0
     timeS = 0
-       
+
     while (gameBoard.firstChild) {
         gameBoard.removeChild(gameBoard.firstChild);
     }
@@ -411,7 +405,40 @@ function startGame(){
     grid = new Grid(gameBoard)
     grid.randomEmptyCell().tile = new Tile(gameBoard)
     grid.randomEmptyCell().tile = new Tile(gameBoard)
-    
+
     time = setInterval(decreaseTime, 1000)
     setupInput()
+}
+
+function printStatistic() {
+    if (timeS < 10) {
+        timeS = `0${timeS}`
+    }
+    tabs.push({ min: timeM, sec: timeS, score: score })
+    tabs.sort(function (x1, x2) {
+        if (x1.min < x2.min) return -1;
+        if (x1.min > x2.min) return 1;
+        if (x1.sec < x2.sec) return -1;
+        if (x1.sec > x2.sec) return 1;
+        if(x1.score > x2.score) return -1;
+        if(x1.score < x2.score) return 1;
+        return 0;
+    });
+    while (columScore.firstChild) {
+        columScore.removeChild(columScore.firstChild);
+    }
+    while (columTime.firstChild) {
+        columTime.removeChild(columTime.firstChild);
+    }
+    while (columPosition.firstChild) {
+        columPosition.removeChild(columPosition.firstChild);
+    }
+    columScore.innerHTML += `<div class="ststistic__score">Счет</div>`
+        columTime.innerHTML += `<div class="ststistic__time">Время</div>`
+        columPosition.innerHTML += `<div class="ststistic__position">Позиция</div>`
+    for (let i = 0; i < tabs.length; i++) {
+        columScore.innerHTML += `<div class="ststistic__score">${tabs[i].score}</div>`
+        columTime.innerHTML += `<div class="ststistic__time">${tabs[i].min}:${tabs[i].sec}</div>`
+        columPosition.innerHTML += `<div class="ststistic__position">${i + 1}.</div>`
+    }
 }

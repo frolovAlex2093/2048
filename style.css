@@ -113,18 +113,6 @@ body {
     -moz-transition: 100ms ease-in-out;
     -ms-transition: 100ms ease-in-out;
     -o-transition: 100ms ease-in-out;
-    /* font-size: 0px; */
-    line-height: 1em;
-    overflow: hidden;
-    overflow-wrap: normal;
-    word-wrap: normal;
-    word-break: normal;
-    line-break: auto;
-    -webkit-hyphens: none;
-    hyphens: none;
-    /* height: 160px; */
-    /* width: 30%; */
-    /* background: rgba(240, 240, 240); */
 }
 
 @keyframes show {
