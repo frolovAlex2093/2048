@@ -339,7 +339,7 @@ function checkWin() {
     for (let i = 0; i < grid.cells.length; i++) {
         if (grid.cells[i].tile) {
             count += grid.cells[i].tile.value
-            if (grid.cells[i].tile.value === 32) {
+            if (grid.cells[i].tile.value === 2048) {
                 clearInterval(time)
                 alertGame("win")
             }
@@ -401,12 +401,12 @@ function startGame(){
         gameBoard.removeChild(gameBoard.firstChild);
     }
 
-    gameBoard.innerHTML = `<div class="aaa"></div>`
-    document.querySelector(".aaa").addEventListener('touchstart', handleTouchStart, false);
-    document.querySelector(".aaa").addEventListener('touchmove', handleTouchMove, false);
+    gameBoard.innerHTML = `<div class="touch-panel"></div>`
+    document.querySelector(".touch-panel").addEventListener('touchstart', handleTouchStart, false);
+    document.querySelector(".touch-panel").addEventListener('touchmove', handleTouchMove, false);
 
-    document.querySelector(".aaa").addEventListener('mousedown', handleMouseStart, false);
-    document.querySelector(".aaa").addEventListener('mouseup', handleMouseMove, false);
+    document.querySelector(".touch-panel").addEventListener('mousedown', handleMouseStart, false);
+    document.querySelector(".touch-panel").addEventListener('mouseup', handleMouseMove, false);
 
     grid = new Grid(gameBoard)
     grid.randomEmptyCell().tile = new Tile(gameBoard)
