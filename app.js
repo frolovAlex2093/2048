@@ -400,6 +400,7 @@ function startGame() {
     gameBoard.innerHTML = `<div class="touch-panel"></div>`
     document.querySelector(".touch-panel").addEventListener('touchstart', handleTouchStart, false);
     document.querySelector(".touch-panel").addEventListener('touchend', handleTouchMove, false);
+    document.querySelector(".touch-panel").addEventListener('touchmove', (e) => {e.preventDefault()} , false);
 
 
     document.querySelector(".touch-panel").addEventListener('mousedown', handleMouseStart, false);
