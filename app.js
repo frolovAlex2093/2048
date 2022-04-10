@@ -339,7 +339,7 @@ function checkWin() {
     for (let i = 0; i < grid.cells.length; i++) {
         if (grid.cells[i].tile) {
             count += grid.cells[i].tile.value
-            if (grid.cells[i].tile.value === 2048) {
+            if (grid.cells[i].tile.value === 32) {
                 clearInterval(time)
                 alertGame("win")
             }
@@ -363,16 +363,21 @@ function alertGame(text){
     alert.classList.remove("hide")
     alert.classList.add("show")
 
+    let seconds = timeS
+    if (seconds < 10) {
+        seconds = `0${seconds}`
+    }
+
     if(text === "win"){
         columScore.innerHTML += `<div class="ststistic__score">${score}</div>`
-        columTime.innerHTML += `<div class="ststistic__time">${timeM}:${decreaseTime()}</div>`
+        columTime.innerHTML += `<div class="ststistic__time">${timeM}:${seconds}</div>`
         columPosition.innerHTML += `<div class="ststistic__position">${columPosition.children.length + 1}.</div>`  
 
-        alertText.innerHTML = `Вы выйграли <br> время: ${timeM}:${decreaseTime()} <br> счет: ${score}`
+        alertText.innerHTML = `Вы выйграли <br> время: ${timeM}:${seconds} <br> счет: ${score}`
         alertButton.innerHTML = "ЗАНОВО"
         
     }else if(text === "lose"){
-        alertText.innerHTML = `Вы проиграли <br> время: ${timeM}:${decreaseTime()} <br> счет: ${score}`
+        alertText.innerHTML = `Вы проиграли <br> время: ${timeM}:${seconds} <br> счет: ${score}`
         alertButton.innerHTML = "ЗАНОВО"
 
     }else if(text === "start"){
