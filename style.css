@@ -25,12 +25,11 @@ body {
 .header {
     display: flex;
     padding-bottom: 1vmin;
-    margin-top: 2.5vmin;
     align-items: center;
     gap: 1vmin;
     color: white;
     border-bottom: 3px solid white;
-    margin: 50px 0px 20px 0px;
+    margin: 10px 0px 20px 0px;
 }
 
 .timer {
@@ -151,7 +150,7 @@ body {
 .ststistic__button {
     margin: 30px auto;
     padding: 20px;
-    font-size: 5vmin;
+    font-size: 4vmin;
     color: white;
     background: rgb(80, 77, 77);
     width: min-content;

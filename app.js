@@ -339,7 +339,7 @@ function checkWin() {
     for (let i = 0; i < grid.cells.length; i++) {
         if (grid.cells[i].tile) {
             count += grid.cells[i].tile.value
-            if (grid.cells[i].tile.value === 32) {
+            if (grid.cells[i].tile.value === 2048) {
                 clearInterval(time)
                 alertGame("win")
             }
@@ -376,7 +376,7 @@ function alertGame(text){
         alertButton.innerHTML = "ЗАНОВО"
 
     }else if(text === "start"){
-        alertText.innerHTML = "2048"
+        alertText.innerHTML = "Наберите 2048"
     }
     alertButton.addEventListener("click", () => {
         alert.classList.remove("show")
