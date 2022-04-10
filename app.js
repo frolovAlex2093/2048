@@ -179,12 +179,17 @@ async function handleTouchMove(e) {
     if (!xDown || !yDown) {
         return
     }
-
-    let xUp = e.touches[0].clientX;
-    let yUp = e.touches[0].clientY;
+    
+    let xUp = e.changedTouches[0].clientX;
+    let yUp = e.changedTouches[0].clientY;
 
     let xDiff = xDown - xUp;
     let yDiff = yDown - yUp;
+
+    console.log(xDown)
+    console.log(xUp)
+    console.log(xDiff)
+
 
     if (yDiff !== 0 && xDiff !== 0) {
         if (Math.abs(xDiff) > Math.abs(yDiff)) {
@@ -397,7 +402,8 @@ function startGame() {
 
     gameBoard.innerHTML = `<div class="touch-panel"></div>`
     document.querySelector(".touch-panel").addEventListener('touchstart', handleTouchStart, false);
-    document.querySelector(".touch-panel").addEventListener('touchmove', handleTouchMove, false);
+    document.querySelector(".touch-panel").addEventListener('touchend', handleTouchMove, false);
+
 
     document.querySelector(".touch-panel").addEventListener('mousedown', handleMouseStart, false);
     document.querySelector(".touch-panel").addEventListener('mouseup', handleMouseMove, false);
@@ -442,3 +448,5 @@ function printStatistic() {
         columPosition.innerHTML += `<div class="ststistic__position">${i + 1}.</div>`
     }
 }
+
+
